@@ -1,17 +1,20 @@
-from setuptools import setup
+from setuptools import setup, Extension
+
+dotspath_module = Extension('dotspath', sources=['./dotspath/module.cpp'])
 
 setup(
     name='dots-game-env',
-    version='0.1.0',
+    version='0.1.1',
     description='Python Environment for dots game',
     url='https://github.com/cobets/dots-env',
     author='Kobets Serhii',
     author_email='cobets@gmail.com',
     license='MIT',
+    ext_modules=[dotspath_module],
     install_requires=[
         'numpy',
-        'matplotlib',
-        'dotspath'
+        'matplotlib'
     ]
 )
+
 
