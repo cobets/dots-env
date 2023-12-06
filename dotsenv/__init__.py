@@ -18,6 +18,7 @@ class DotsEnv:
         self.trace = {BLACK: set(), RED: set()}
         self.player = BLACK
         self.opponent = RED
+        self.last_catch_area_size = 0
 
     def show_board(self):
         # output board
@@ -83,6 +84,7 @@ class DotsEnv:
                 self.trace[RED].remove((x, y))
 
     def apply_to_board(self, paths):
+        self.last_catch_area_size = 0
         for path in paths:
             min_x, min_y = np.min(path, axis=0)
             max_x, max_y = np.max(path, axis=0)
@@ -93,6 +95,7 @@ class DotsEnv:
             internal_area = path_square_area[point_in_path]
             internal_area = [(p[0], p[1]) for p in internal_area if (p[0], p[1]) not in path]
             self.disable_area(internal_area)
+            self.last_catch_area_size += len(internal_area)
 
     def play(self, action):
         x, y = action // self.width, action % self.height
@@ -136,3 +139,15 @@ class DotsEnv:
         a = np.zeros((1, self.width, self.height), dtype=np.float32)
         a[0, action // self.width, action % self.height] = 1
         return a
+
+    def step(self, action):
+        # gym-like interface
+        self.play(action)
+        return self.get_observation(), self.last_catch_area_size, self.terminal()
+
+    def get_observation(self):
+        # gym-like interface
+        board_player1 = np.where(self.board & BLACK, 1, 0)
+        board_player2 = np.where(self.board & RED, 1, 0)
+        board_to_play = np.full((self.width, self.height), 1 if self.player == BLACK else -1)
+        return np.array([board_player1, board_player2, board_to_play], dtype="int32")
