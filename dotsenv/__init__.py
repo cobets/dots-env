@@ -143,9 +143,9 @@ class DotsEnv:
     def step(self, action):
         # gym-like interface
         self.play(action)
-        return self.get_observation(), self.last_catch_area_size, self.terminal()
+        return self.observation(), self.last_catch_area_size, self.terminal()
 
-    def get_observation(self):
+    def observation(self):
         # gym-like interface
         board_player1 = np.where(self.board & BLACK, 1, 0)
         board_player2 = np.where(self.board & RED, 1, 0)
