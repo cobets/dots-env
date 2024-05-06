@@ -9,7 +9,7 @@ RED = 8
 
 
 class DotsEnv:
-    def __init__(self, width=24, height=24):
+    def __init__(self, width=24, height=24, collect_caught_paths=False):
         self.width = width
         self.height = height
         # board with dot states
@@ -19,6 +19,9 @@ class DotsEnv:
         self.player = BLACK
         self.opponent = RED
         self.last_catch_area_size = 0
+        self.collect_caught_paths = collect_caught_paths
+        self.caught_paths_black = []
+        self.caught_paths_red = []
 
     def show_board(self):
         # output board
@@ -94,8 +97,17 @@ class DotsEnv:
             point_in_path = PlotPath(path).contains_points(path_square_area)
             internal_area = path_square_area[point_in_path]
             internal_area = [(p[0], p[1]) for p in internal_area if (p[0], p[1]) not in path]
-            self.disable_area(internal_area)
-            self.last_catch_area_size += len(internal_area)
+
+            if internal_area:
+                self.disable_area(internal_area)
+                self.last_catch_area_size += len(internal_area)
+
+                if self.collect_caught_paths:
+                    if self.player == BLACK:
+                        self.caught_paths_black.append(path)
+                    else:
+                        self.caught_paths_red.append(path)
+
 
     def play(self, action):
         x, y = action // self.width, action % self.height

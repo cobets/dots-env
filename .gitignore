@@ -1,3 +1,5 @@
 /.idea/*
 /dotspath/dotspath.egg-info/*
 /dotspath/build/*
+/dots_game_env.egg-info/
+/build/*

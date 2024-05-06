@@ -4,7 +4,7 @@ dotspath_module = Extension('dotspath', sources=['./dotspath/module.cpp'])
 
 setup(
     name='dots-game-env',
-    version='0.1.7',
+    version='0.1.8',
     description='Python Environment for dots game',
     url='https://github.com/cobets/dots-env',
     author='Kobets Serhii',
